@@ -33,10 +33,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Gemini AI Code Reviewer
-        uses: truongnh1992/gemini-ai-code-reviewer@main
+      - uses: truongnh1992/gemini-ai-code-reviewer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.AI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-2.5-pro # Optional, default is `gemini-2.5-flash`
           EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
