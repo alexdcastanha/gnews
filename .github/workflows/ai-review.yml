@@ -16,14 +16,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: AI Reviewer
-        uses: anc95/ChatGPT-CodeReview@main
-        env:
+      - name: Run Gemini AI Code Reviewer
+        uses: truongnh1992/gemini-ai-code-reviewer@main
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.AI_API_KEY }}
-          OPENAI_API_ENDPOINT: https://generativelanguage.googleapis.com/v1beta/openai
-          LANGUAGE: Portuguese
-          MODEL: gemini-1.5-pro
+          GEMINI_API_KEY: ${{ secrets.AI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-pro
+          EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
           PROMPT: |
             Aja como um Engenheiro de Seguranca Senior (DevSecOps).
             Analise o DIFF deste Pull Request buscando:
