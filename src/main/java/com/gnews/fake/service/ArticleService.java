@@ -126,7 +126,7 @@ public class ArticleService {
     // Método adicionado propositalmente para o laboratório: vulnerável a SQL Injection
     // Não usar em produção - serve apenas para testar o revisor de IA.
     // Exemplo de construção insegura de query concatenando entrada do usuário.
-    public List<Article> findByTitleVulnerable(String userInput) {
+    public List<Article> findByTitle(String userInput) {
         String query = "SELECT * FROM articles WHERE title = '" + userInput + "'";
         // Simula execução da query insegura; no backend real isso seria passado ao JDBC.
         System.out.println("Executing vulnerable query: " + query);
