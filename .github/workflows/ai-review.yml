@@ -1,41 +1,33 @@
-name: Gemini AI Code Reviewer
+name: AI Code Review
 
 on:
-  issue_comment:
-    types: [created]
-
-permissions: write-all
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  gemini-code-review:
+  review:
     runs-on: ubuntu-latest
-    if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/gemini-review')
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
-      - name: PR Info
-        run: |
-          echo "Comment: ${{ github.event.comment.body }}"
-          echo "Issue Number: ${{ github.event.issue.number }}"
-          echo "Repository: ${{ github.repository }}"
-
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get PR Details
-        id: pr
-        run: |
-          PR_JSON=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
-          echo "head_sha=$(echo $PR_JSON | jq -r .head.sha)" >> $GITHUB_OUTPUT
-          echo "base_sha=$(echo $PR_JSON | jq -r .base.sha)" >> $GITHUB_OUTPUT
+      - name: AI Reviewer
+        uses: anc95/ChatGPT-CodeReview@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: truongnh1992/gemini-ai-code-reviewer@main
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.AI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-pro # Optional, default is `gemini-2.5-flash`
-          EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
+          OPENAI_API_KEY: ${{ secrets.AI_API_KEY }}
+          OPENAI_API_ENDPOINT: https://generativelanguage.googleapis.com/v1beta/openai
+          LANGUAGE: Portuguese
+          MODEL: gemini-1.5-pro
+          PROMPT: |
+            Aja como um Engenheiro de Seguranca Senior (DevSecOps).
+            Analise o DIFF deste Pull Request buscando:
+            1. Vulnerabilidades OWASP Top 10 (especialmente SQL Injection e Insecure Deserialization).
+            2. Code Smells e complexidade ciclomatica desnecessaria.
+            3. Aderencia as melhores praticas de Java 25 e Spring Boot 3.4.
+            4. Responda com comentarios tecnicos e construtivos diretamente nas linhas do codigo afetado.
