@@ -1,18 +1,20 @@
-name: AI Code Review
+name: Gemini AI Code Reviewer
 
 on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
-  review:
+  gemini-code-review:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -23,10 +25,3 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.AI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-pro
           EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
-          PROMPT: |
-            Aja como um Engenheiro de Seguranca Senior (DevSecOps).
-            Analise o DIFF deste Pull Request buscando:
-            1. Vulnerabilidades OWASP Top 10 (especialmente SQL Injection e Insecure Deserialization).
-            2. Code Smells e complexidade ciclomatica desnecessaria.
-            3. Aderencia as melhores praticas de Java 25 e Spring Boot 3.4.
-            4. Responda com comentarios tecnicos e construtivos diretamente nas linhas do codigo afetado.
