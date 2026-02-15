@@ -126,25 +126,10 @@ public class ArticleService {
     // Método adicionado propositalmente para o laboratório: vulnerável a SQL Injection
     // Não usar em produção - serve apenas para testar o revisor de IA.
     // Exemplo de construção insegura de query concatenando entrada do usuário.
-    public List<Article> findByTitle(String userInput) {
+    public List<Article> findByTitleVulnerable(String userInput) {
         String query = "SELECT * FROM articles WHERE title = '" + userInput + "'";
         // Simula execução da query insegura; no backend real isso seria passado ao JDBC.
         System.out.println("Executing vulnerable query: " + query);
-
-        // Uso vulnerável intencional: concatenamos input do usuário e executamos via Statement.
-        // Aqui usamos nomes qualificados para evitar alterar os imports. A URL é inválida
-        // por intenção — a execução real falhará em runtime, mas o padrão é detectável
-        // por analisadores estáticos que procuram por concatenação + Statement.executeQuery.
-        try {
-            java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:invalid:dummy");
-            java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet rs = stmt.executeQuery(query);
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (java.sql.SQLException e) {
-            // Ignorar: execução real não é o objetivo aqui.
-        }
 
         // Para manter o código funcional no projeto fake, retornamos os artigos com título exato.
         return articleRepository.findAll().stream()
