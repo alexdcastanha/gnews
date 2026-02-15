@@ -1,6 +1,8 @@
 name: AI Code Review - Gemini
 
 on:
+  pull_request:
+    types: [opened, synchronize]
   issue_comment:
     types: [created]
 
