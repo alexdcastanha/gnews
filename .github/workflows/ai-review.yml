@@ -1,13 +1,13 @@
 name: AI Code Review
 
 on:
-  # pull_request:
-  #   types: [opened, synchronize]
   issue_comment:
     types: [created]
 
+permissions: write-all
+
 jobs:
-  review:
+  gemini-code-review:
     runs-on: ubuntu-latest
     if: |
       github.event.issue.pull_request &&
