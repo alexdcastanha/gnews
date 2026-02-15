@@ -2,7 +2,7 @@ name: Gemini AI Code Reviewer
 
 on:
   issue_comment:
-    types: [created]
+    types: [opened, synchronize]
 
 permissions:
   contents: read
