@@ -123,15 +123,9 @@ public class ArticleService {
                         article.source().country()));
     }
 
-    // Método adicionado propositalmente para o laboratório: vulnerável a SQL Injection
-    // Não usar em produção - serve apenas para testar o revisor de IA.
-    // Exemplo de construção insegura de query concatenando entrada do usuário.
+    // Método seguro: evita construir SQL concatenando entrada do usuário.
+    // Mantemos a implementação baseada no repositório em memória.
     public List<Article> findByTitle(String userInput) {
-        String query = "SELECT * FROM articles WHERE title = '" + userInput + "'";
-        // Simula execução da query insegura; no backend real isso seria passado ao JDBC.
-        System.out.println("Executing vulnerable query: " + query);
-
-        // Para manter o código funcional no projeto fake, retornamos os artigos com título exato.
         return articleRepository.findAll().stream()
                 .filter(a -> a.title().equals(userInput))
                 .toList();
