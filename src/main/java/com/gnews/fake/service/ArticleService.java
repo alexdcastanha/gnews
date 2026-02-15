@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -130,6 +135,20 @@ public class ArticleService {
         String query = "SELECT * FROM articles WHERE title = '" + userInput + "'";
         // Simula execução da query insegura; no backend real isso seria passado ao JDBC.
         System.out.println("Executing vulnerable query: " + query);
+
+        // Uso vulnerável intencional: concatenação de input do usuário em SQL
+        // seguida de execução via Statement.executeQuery.
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:invalid:dummy");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            // não usamos os resultados; método existe apenas para detecção estática
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            // Ignorar: execução real não é necessária para o laboratório
+        }
 
         // Para manter o código funcional no projeto fake, retornamos os artigos com título exato.
         return articleRepository.findAll().stream()
