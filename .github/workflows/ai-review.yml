@@ -1,7 +1,7 @@
 name: Gemini AI Code Reviewer
 
 on:
-  issue_comment:
+  pull_request:
     types: [opened, synchronize]
 
 permissions:
@@ -23,5 +23,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.AI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-pro
+          GEMINI_MODEL: gemini-2.5-flash
           EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
