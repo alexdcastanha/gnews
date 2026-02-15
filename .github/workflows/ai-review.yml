@@ -1,8 +1,8 @@
 name: AI Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  # pull_request:
+  #   types: [opened, synchronize]
   issue_comment:
     types: [created]
 
